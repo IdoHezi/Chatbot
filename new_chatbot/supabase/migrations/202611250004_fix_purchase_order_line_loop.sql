@@ -1,5 +1,6 @@
 -- Stage 1 corrective migration: allow the PO line loop record to access its value column.
--- Pending review; apply only after approval.
+-- Applied to the selected Supabase project after user approval.
+-- Returned migration version: 20261125145547 (fix_purchase_order_line_loop).
 
 CREATE OR REPLACE FUNCTION inventory.create_purchase_order(
     p_supplier_id text,
