@@ -9,6 +9,7 @@ from inventory_tools import (
     basket_cost,
     choose_supplier_option,
     eoq,
+    exact_json_numbers,
     feasible_quantities,
     forecast_stockout,
     money,
@@ -32,6 +33,14 @@ class ArithmeticTests(unittest.TestCase):
         self.assertEqual(money(Decimal("1.004")), Decimal("1.00"))
         with self.assertRaises(TypeError):
             money(1.005)
+
+    def test_postgrest_json_numbers_are_normalized_before_money_math(self):
+        row = exact_json_numbers({"unit_price": 5.6, "fees": [1.2, 30]})
+        self.assertEqual(row["unit_price"], Decimal("5.6"))
+        self.assertEqual(money(row["unit_price"]), Decimal("5.60"))
+        self.assertEqual(row["fees"], [Decimal("1.2"), 30])
+        with self.assertRaises(TypeError):
+            money(5.6)
 
     def test_average_uses_calendar_denominator_and_annotated_exclusion(self):
         rows = [

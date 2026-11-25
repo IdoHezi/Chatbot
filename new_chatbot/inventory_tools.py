@@ -29,6 +29,24 @@ def money(value: Decimal | int | str) -> Decimal:
     return decimal_value(value).quantize(CENT, rounding=ROUND_HALF_UP)
 
 
+def exact_json_numbers(value: Any) -> Any:
+    """Convert JSON-decoded floats from PostgREST to decimal text values.
+
+    PostgREST returns PostgreSQL numeric values as JSON numbers, which the
+    Supabase Python client decodes as floats. Converting through ``str`` avoids
+    carrying the float's binary representation into money calculations.
+    """
+    if isinstance(value, float):
+        return Decimal(str(value))
+    if isinstance(value, dict):
+        return {key: exact_json_numbers(item) for key, item in value.items()}
+    if isinstance(value, list):
+        return [exact_json_numbers(item) for item in value]
+    if isinstance(value, tuple):
+        return tuple(exact_json_numbers(item) for item in value)
+    return value
+
+
 def average_daily_demand(
     sales: Iterable[Mapping[str, Any]],
     start_date: date,
@@ -227,17 +245,17 @@ class InventoryService:
 
     def _rpc(self, name: str, params: Mapping[str, Any] | None = None) -> Any:
         result = self._client.schema("inventory").rpc(name, dict(params or {})).execute()
-        return result.data
+        return exact_json_numbers(result.data)
 
     def _state(self) -> dict[str, Any]:
         rows = self._table("demo_state").select("*").eq("singleton", True).limit(1).execute().data
         if not rows:
             raise RuntimeError("Inventory demo has not been initialized")
-        return rows[0]
+        return exact_json_numbers(rows[0])
 
     @staticmethod
     def _rows(response: Any) -> list[dict[str, Any]]:
-        return list(response.data or [])
+        return exact_json_numbers(list(response.data or []))
 
     def list_inventory(self) -> list[dict[str, Any]]:
         state = self._state()
