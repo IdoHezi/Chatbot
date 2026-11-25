@@ -1,6 +1,6 @@
--- Stage 1 draft: final checkpoint schema for langgraph-checkpoint-postgres 3.2.1.
--- Review this migration before applying it. The application must set its
--- PostgreSQL search_path to inventory_checkpoints and must not call setup().
+-- Stage 1: final checkpoint schema for langgraph-checkpoint-postgres 3.2.1.
+-- Applied migration version: 20261125140713 (langgraph_checkpoint_postgres_3_2_1).
+-- Set the application's PostgreSQL search_path to inventory_checkpoints and do not call setup().
 -- Indexes are created non-concurrently because this migration is applied as DDL;
 -- their names and indexed columns match the package's version-8 migration state.
 

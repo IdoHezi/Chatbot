@@ -1,5 +1,5 @@
--- Stage 1 draft: inventory schema, demo fixtures, and validated RPCs.
--- Review this migration before applying it to the Supabase project.
+-- Stage 1: inventory schema, demo fixtures, and validated RPCs.
+-- Applied migration version: 20261125140706 (inventory_demo).
 -- API follow-up: expose the inventory schema in Supabase API settings only
 -- after confirming grants below; do not expose inventory_checkpoints.
 
