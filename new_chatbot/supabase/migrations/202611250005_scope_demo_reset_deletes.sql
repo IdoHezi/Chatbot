@@ -1,6 +1,7 @@
 -- Stage 4 corrective migration: scope demo reset deletes to the current run.
 -- The Supabase Data API rejects unfiltered DELETE statements in this function.
--- Draft only; apply after user review and approval.
+-- Applied to the selected Supabase project after user approval.
+-- Returned migration version: 20261125161026 (scope_demo_reset_deletes).
 
 CREATE OR REPLACE FUNCTION inventory.reset_demo(p_scenario text)
 RETURNS jsonb
